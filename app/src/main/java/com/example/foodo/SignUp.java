@@ -9,14 +9,19 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class SignUp extends AppCompatActivity {
+    private DatabaseHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
+
+        // Initialize DatabaseHelper
+        dbHelper = new DatabaseHelper(this);
 
         // Initialize views
         EditText usernameField = findViewById(R.id.login_username);
@@ -42,8 +47,14 @@ public class SignUp extends AppCompatActivity {
                 } else if (!password.equals(reEnterPassword)) {
                     Toast.makeText(SignUp.this, "Passwords do not match", Toast.LENGTH_SHORT).show();
                 } else {
-                    // Perform sign-up logic here (e.g., register user in database)
-                    Toast.makeText(SignUp.this, "Sign Up successful", Toast.LENGTH_SHORT).show();
+                    // Insert user data into the database
+                    boolean isInserted = dbHelper.addUser(username, email, password);
+                    if (isInserted) {
+                        // Show success pop-up
+                        showSuccessPopup();
+                    } else {
+                        Toast.makeText(SignUp.this, "Sign Up failed", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
@@ -74,5 +85,21 @@ public class SignUp extends AppCompatActivity {
                 startActivity(browserIntent);
             }
         });
+    }
+
+    // Method to show a success pop-up
+    private void showSuccessPopup() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Account Created");
+        builder.setMessage("Your account has been successfully created!");
+        builder.setPositiveButton("OK", (dialog, which) -> {
+            // Navigate to SignIn activity after the user clicks "OK"
+            Intent intent = new Intent(SignUp.this, SignIn.class);
+            startActivity(intent);
+            finish(); // Close the SignUp activity
+        });
+        builder.setCancelable(false); // Prevent the user from dismissing the dialog by tapping outside
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }

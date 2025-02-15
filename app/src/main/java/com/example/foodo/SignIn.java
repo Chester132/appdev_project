@@ -12,10 +12,15 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class SignIn extends AppCompatActivity {
+    private DatabaseHelper dbHelper;
+
     @Override
-    protected void onCreate(Bundle savedInstanceState){
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin);
+
+        // Initialize DatabaseHelper
+        dbHelper = new DatabaseHelper(this);
 
         // Initialize views
         EditText usernameField = findViewById(R.id.login_username);
@@ -35,8 +40,17 @@ public class SignIn extends AppCompatActivity {
                 if (username.isEmpty() || password.isEmpty()) {
                     Toast.makeText(SignIn.this, "Please enter both username and password", Toast.LENGTH_SHORT).show();
                 } else {
-                    // Perform login logic here (e.g., authenticate with a server or database)
-                    Toast.makeText(SignIn.this, "Login successful", Toast.LENGTH_SHORT).show();
+                    // Check if the user exists in the database
+                    boolean isValidUser = dbHelper.checkUser(username, password);
+                    if (isValidUser) {
+                        Toast.makeText(SignIn.this, "Login successful", Toast.LENGTH_SHORT).show();
+                        // Navigate to Dashboard
+                        Intent intent = new Intent(SignIn.this, Dashboard.class);
+                        startActivity(intent);
+                        finish(); // Close the SignIn activity
+                    } else {
+                        Toast.makeText(SignIn.this, "Invalid username or password", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });

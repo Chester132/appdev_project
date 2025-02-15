@@ -89,6 +89,8 @@
                 android:layout_gravity="center_horizontal"
                 android:hint="Password"
                 android:layout_marginTop="30dp"
+                app:passwordToggleEnabled="true"
+                android:inputType="textPassword"
                 android:background="@drawable/edtstyle"/>
 
             <Button

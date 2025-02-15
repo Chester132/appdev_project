@@ -46,4 +46,6 @@ dependencies {
 
     // Add Lottie dependency
     implementation("com.airbnb.android:lottie:4.1.0")
+
+    implementation ("org.mindrot:jbcrypt:0.4")
 }
