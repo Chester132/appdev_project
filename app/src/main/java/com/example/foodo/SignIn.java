@@ -44,8 +44,9 @@ public class SignIn extends AppCompatActivity {
                     boolean isValidUser = dbHelper.checkUser(username, password);
                     if (isValidUser) {
                         Toast.makeText(SignIn.this, "Login successful", Toast.LENGTH_SHORT).show();
-                        // Navigate to Dashboard
+                        // Navigate to Dashboard and pass the username
                         Intent intent = new Intent(SignIn.this, Dashboard.class);
+                        intent.putExtra("USERNAME", username); // Pass the username to Dashboard
                         startActivity(intent);
                         finish(); // Close the SignIn activity
                     } else {
@@ -72,7 +73,6 @@ public class SignIn extends AppCompatActivity {
                 startActivity(browserIntent);
             }
         });
-
 
         // Set click listener for Facebook button
         facebookButton.setOnClickListener(new View.OnClickListener() {
